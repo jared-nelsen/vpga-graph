@@ -1,6 +1,6 @@
 # VPGAs
 
-    An implementation of a VPGA in a graph form.
+    An implementation of a VPGA in graph form
 
 ## TODO
 
