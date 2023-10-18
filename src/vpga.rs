@@ -1,69 +1,12 @@
 use ordered_hash_map::OrderedHashMap;
 use uuid::Uuid;
 
-fn main() {
-    println!("Hello, world!");
-}
-
-struct Connection {
-    source_pin_id: Uuid,
-    target_pin_id: Uuid,
-}
-
-struct Pin {
-    id: Uuid,
-    connections: Vec<Connection>,
-    on: bool,
-}
-
-struct InputBlock {
-    width: i32,
-    pins: OrderedHashMap<Uuid, Pin> // Consider making this a vector
-}
-
-struct OutputBlock {
-    width: i32,
-    pins: OrderedHashMap<Uuid, Pin>
-}
-
-struct SwitchBox {
-    count: i32,
-    pins: OrderedHashMap<Uuid, Pin>,
-}
-
-struct LUT {
-    width: i32,
-    input_pins: OrderedHashMap<Uuid, Pin>,
-    output_pin: Pin,
-}
-
-struct VPGASpec {
-    input_block_count: i32,
-    input_block_widths: Vec<i32>,
-    output_block_count: i32,
-    output_block_widths: Vec<i32>,
-    lut_count: i32,
-    lut_widths: Vec<i32>,
-    switch_box_count: i32,
-    switch_box_pin_count: i32,
-}
-
-impl VPGASpec {
-
-    pub fn default(&self) -> Self {
-        VPGASpec { 
-            input_block_count: 1, 
-            input_block_widths: vec![4], 
-            output_block_count: 1, 
-            output_block_widths: vec![4], 
-            lut_count: 4, 
-            lut_widths: vec![4], 
-            switch_box_count: 1, 
-            switch_box_pin_count: 8,
-        }
-    }
-    
-}
+use crate::vpga_spec::VPGASpec;
+use crate::input_block::InputBlock;
+use crate::output_block::OutputBlock;
+use crate::lut::LUT;
+use crate::switch_box::SwitchBox;
+use crate::pin::Pin;
 
 struct VPGA {
     spec: VPGASpec,
