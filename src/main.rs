@@ -18,7 +18,7 @@ struct Pin {
 
 struct InputBlock {
     width: i32,
-    pins: OrderedHashMap<Uuid, Pin>
+    pins: OrderedHashMap<Uuid, Pin> // Consider making this a vector
 }
 
 struct OutputBlock {
@@ -41,7 +41,7 @@ struct VPGA {
     input_blocks: OrderedHashMap<Uuid, InputBlock>,
     output_blocks: OrderedHashMap<Uuid, OutputBlock>,
     luts: OrderedHashMap<Uuid, LUT>,
-    pin_fields: OrderedHashMap<Uuid, PinField>,\
+    pin_fields: OrderedHashMap<Uuid, PinField>,
 }
 
 // Algorithm:
