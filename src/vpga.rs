@@ -1,12 +1,12 @@
-use ordered_hash_map::OrderedHashMap;
 use uuid::Uuid;
+use ordered_hash_map::OrderedHashMap;
 
+use crate::pin::Pin;
 use crate::vpga_spec::VPGASpec;
 use crate::input_block::InputBlock;
 use crate::output_block::OutputBlock;
 use crate::lut::LUT;
 use crate::switch_box::SwitchBox;
-use crate::pin::Pin;
 
 struct VPGA {
     spec: VPGASpec,
