@@ -7,6 +7,7 @@ use crate::input_block::InputBlock;
 use crate::output_block::OutputBlock;
 use crate::lut::LUT;
 use crate::switch_box::SwitchBox;
+use crate::connection::Connection;
 
 struct VPGA {
     spec: VPGASpec,
@@ -109,6 +110,99 @@ impl VPGA {
             output_blocks, 
             luts,
             switch_boxes,
+        }
+    }
+
+    pub fn connect_vpga(&mut self) {
+        
+        fn connect_pins(pins: &mut OrderedHashMap<Uuid, Pin>, other_pins: &OrderedHashMap<Uuid, &Pin>) {
+            for (_, pin) in pins.iter_mut() {
+                for (other_pin_id, _) in other_pins.iter() {
+                    if &pin.id != other_pin_id {
+                        let connection = Connection {
+                            source_pin_id: pin.id,
+                            target_pin_id: *other_pin_id,
+                        };
+                        pin.connections.push(connection);
+                    }
+                }
+            }
+        }
+
+        fn connect_single_pin(pin: &mut Pin, other_pins: &OrderedHashMap<Uuid, &Pin>) {
+            for (other_pin_id, _) in other_pins.iter() {
+                if &pin.id != other_pin_id {
+                    let connection = Connection {
+                        source_pin_id: pin.id,
+                        target_pin_id: *other_pin_id,
+                    };
+                    pin.connections.push(connection);
+                }
+            }
+        }
+
+        let all_pins = OrderedHashMap::new();
+        self.flatten_pins(all_pins);
+
+        // Connect input block pins
+        let input_block_ids: Vec<Uuid> = self.input_blocks.keys().cloned().collect();
+        for block_id in &input_block_ids {
+            let mut input_block = self.input_blocks.remove(block_id).unwrap();
+            connect_pins(&mut input_block.pins, &all_pins);
+            self.input_blocks.insert(*block_id, input_block);
+        }
+
+        // Connect output block pins
+        let output_block_ids: Vec<Uuid> = self.output_blocks.keys().cloned().collect();
+        for block_id in &output_block_ids {
+            let mut output_block = self.output_blocks.remove(block_id).unwrap();
+            connect_pins(&mut output_block.pins, &all_pins);
+            self.output_blocks.insert(*block_id, output_block);
+        }
+
+        // Connect LUT pins
+        let lut_ids: Vec<Uuid> = self.luts.keys().cloned().collect();
+        for lut_id in &lut_ids {
+            let mut lut = self.luts.remove(lut_id).unwrap();
+            connect_pins(&mut lut.input_pins, &all_pins);
+            connect_single_pin(&mut lut.output_pin, &all_pins);
+            self.luts.insert(*lut_id, lut);
+        }
+
+        // Connect switch box pins
+        let switch_box_ids: Vec<Uuid> = self.switch_boxes.keys().cloned().collect();
+        for box_id in &switch_box_ids {
+            let mut switch_box = self.switch_boxes.remove(box_id).unwrap();
+            connect_pins(&mut switch_box.pins, &all_pins);
+            self.switch_boxes.insert(*box_id, switch_box);
+        }
+    }
+
+    fn flatten_pins(&self, mut all_pins: OrderedHashMap<Uuid, &Pin>) {
+
+        for (_, input_block) in self.input_blocks.iter() {
+            for (id, pin) in &input_block.pins {
+                all_pins.insert(*id, pin);
+            }
+        }
+        
+        for (_, output_block) in self.output_blocks.iter() {
+            for (id, pin) in &output_block.pins {
+                all_pins.insert(*id, pin);
+            }
+        }
+
+        for (_, lut) in self.luts.iter() {
+            for (id, pin) in &lut.input_pins {
+                all_pins.insert(*id, pin);
+            }
+            all_pins.insert(lut.output_pin.id, &lut.output_pin);
+        }
+
+        for (_, switch_box) in self.switch_boxes.iter() {
+            for (id, pin) in &switch_box.pins {
+                all_pins.insert(*id, pin);
+            }
         }
     }
         
