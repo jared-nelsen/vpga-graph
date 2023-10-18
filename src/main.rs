@@ -41,8 +41,7 @@ struct VPGA {
     input_blocks: OrderedHashMap<Uuid, InputBlock>,
     output_blocks: OrderedHashMap<Uuid, OutputBlock>,
     luts: OrderedHashMap<Uuid, LUT>,
-    pin_fields: OrderedHashMap<Uuid, PinField>,
-    graph: Vec<Pin>,
+    pin_fields: OrderedHashMap<Uuid, PinField>,\
 }
 
 // Algorithm:
