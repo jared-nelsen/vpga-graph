@@ -9,7 +9,7 @@ impl InputBlock {
 
     pub fn new(width: i8) -> Self {
         let mut pins = Vec::new();
-        for i in 0..width {
+        for _i in 0..width {
             pins.push(Uuid::new_v4());
         }
         InputBlock { width, pins }
