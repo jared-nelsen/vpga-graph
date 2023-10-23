@@ -12,7 +12,7 @@
   [pin]
   (assoc pin :state 0))
 
-(defn neigbors
+(defn neighbors
   "Returns the neighbor pin-ids from the given Pin"
   [pin]
   (:neighbor-pin-ids pin))
