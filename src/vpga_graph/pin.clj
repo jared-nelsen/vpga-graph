@@ -2,11 +2,6 @@
 
 (defrecord Pin [id state neighbor-pin-ids])
 
-(defn generate
-  "Generates an unconnected pin"
-  []
-  (Pin. "" 0 []))
-
 (defn reset
   "Resets a pin's state to off"
   [pin]
@@ -23,3 +18,8 @@
   (let [pin-neighbors (:neighbor-pin-ids pin)
         updated-neighbors (conj pin-neighbors (:id other-pin))]
     (assoc pin :neighbor-pin-ids updated-neighbors)))
+
+(defn generate
+  "Generates a pin with the given id"
+  [id]
+  (Pin. id 0 []))

@@ -3,13 +3,6 @@
 
 (defrecord LUT [width input-pin-ids output-pin-id])
 
-(defn generate
-  "Generates an LUT"
-  [width]
-  (let [input-pin-ids (vec (take width (repeatedly pin/generate)))
-        output-pin-id (pin/generate)]
-    (LUT. width input-pin-ids output-pin-id)))
-
 (defn pin-ids
   "Returns the ids of the pins in the LUT"
   [lut]
@@ -18,3 +11,10 @@
 (defn operate
   "Peforms the LUT operation for the given context"
   [context lut])
+
+(defn generate
+  "Generates an LUT"
+  [width]
+  (let [input-pin-ids (vec (take width (repeatedly pin/generate-id)))
+        output-pin-id (pin/generate-id)]
+    (LUT. width input-pin-ids output-pin-id)))
