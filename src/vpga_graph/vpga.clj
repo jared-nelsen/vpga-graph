@@ -7,4 +7,6 @@
    :input-blocks []
    :output-blocks []
    :switch-boxes []
-   :luts []})
+   :luts []
+   :ids-to-pins {}
+   :ids-to-connections {}})
