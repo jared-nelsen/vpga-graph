@@ -14,5 +14,5 @@
 
 (defn generate
   "Generates a connection between the given pins that is by default disconnected"
-  [source-pin target-pin]
-  (Connection. (generate-id source-pin target-pin) source-pin target-pin 0))
+  [id source-pin-id target-pin-id]
+  (Connection. id source-pin-id target-pin-id 0))

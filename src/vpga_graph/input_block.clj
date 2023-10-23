@@ -8,7 +8,7 @@
   [vpga input-block input])
 
 (defn pin-ids
-  "Retrieves the pin ids from the Input Block"
+  "Returns the ids of the Input Block's pins"
   [input-block]
   (:pin-ids input-block))
 
