@@ -17,6 +17,18 @@
         lut-pins (apply concat (map #(lut/pin-ids %) luts))]
     (vec (concat input-block-pins output-block-pins switch-box-pins lut-pins))))
 
+(defn reset
+  "Resets all of the pins to an off state"
+  [vpga]
+  (loop [remaining-pin-ids (-> vpga :pin-map keys)
+         new-pin-map {}]
+    (if (empty? remaining-pin-ids)
+      (assoc vpga :pin-map new-pin-map)
+      (let [pin-id (first remaining-pin-ids)
+            pin-for-id (-> vpga :pin-map pin-id)
+            updated-pin (pin/reset pin-for-id)]
+        (recur (rest remaining-pin-ids) (assoc new-pin-map pin-id updated-pin))))))
+
 (defn generate-pin-map
   "Generates the map of pin ids to pins"
   [all-pin-ids]
