@@ -1,25 +1,19 @@
 pub struct VPGASpec {
-    pub input_block_count: i32,
-    pub input_block_widths: Vec<i32>,
-    pub output_block_count: i32,
-    pub output_block_widths: Vec<i32>,
-    pub lut_count: i32,
-    pub lut_widths: Vec<i32>,
-    pub switch_box_count: i32,
-    pub switch_box_pin_count: i32,
+    pub input_block_width: i8,
+    pub output_block_width: i8,
+    pub lut_count: i8,
+    pub lut_width: i8,
+    pub switch_box_pin_count: i8,
 }
 
 impl VPGASpec {
 
     pub fn default(&self) -> Self {
-        VPGASpec { 
-            input_block_count: 1, 
-            input_block_widths: vec![4], 
-            output_block_count: 1, 
-            output_block_widths: vec![4], 
+        VPGASpec {
+            input_block_width: 8, 
+            output_block_width: 8, 
             lut_count: 4, 
-            lut_widths: vec![4], 
-            switch_box_count: 1, 
+            lut_width: 4,  
             switch_box_pin_count: 8,
         }
     }
