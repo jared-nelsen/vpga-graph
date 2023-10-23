@@ -2,7 +2,7 @@
 
 (defrecord Connection [id source-pin-id target-pin-id connected-state])
 
-(defn update
+(defn update-connection
   "Updates the connection to be either connected or disconnected"
   [connection connected-state]
   (assoc connection :connected connected-state))
