@@ -1,3 +1,5 @@
+
+#[derive(Clone, Copy)]
 pub struct VPGASpec {
     pub input_block_width: i8,
     pub output_block_width: i8,

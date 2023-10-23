@@ -1,13 +1,13 @@
 use uuid::Uuid;
 
 pub struct InputBlock {
-    pub width: i32,
+    pub width: i8,
     pub pins: Vec<Uuid>,
 }
 
 impl InputBlock {
 
-    pub fn new(&self, width: i32) -> Self {
+    pub fn new(width: i8) -> Self {
         let mut pins = Vec::new();
         for i in 0..width {
             pins.push(Uuid::new_v4());
@@ -16,7 +16,7 @@ impl InputBlock {
     }
 
     pub fn get_pins(&self) -> Vec<Uuid> {
-        self.pins
+        self.pins.clone()
     }
 
 }

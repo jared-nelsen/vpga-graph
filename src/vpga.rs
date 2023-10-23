@@ -13,20 +13,18 @@ struct VPGA {
     input_block: InputBlock,
     output_block: OutputBlock,
     switch_box: SwitchBox,
-    luts: LUT,
+    luts: Vec<LUT>,
 }
 
 impl VPGA {
 
-    pub fn default(self) -> Self {
-        let default_spec = VPGASpec::default(&self.spec);
-    
+    pub fn default(self, default_spec: VPGASpec) -> Self {
         VPGA {
             spec: default_spec,
-            input_block: InputBlock::new(&self, default_spec.input_block_width), 
-            output_block: OutputBlock::new(&self, default_spec.output_block_width),
-            switch_box: ,
-            luts: ,
+            input_block: InputBlock::new(default_spec.input_block_width), 
+            output_block: OutputBlock::new(default_spec.output_block_width),
+            switch_box: SwitchBox::new(default_spec.switch_box_pin_count),
+            luts: LUT::new_n(default_spec.lut_count, default_spec.lut_width),
         }
     }
         
