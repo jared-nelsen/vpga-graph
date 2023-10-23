@@ -12,8 +12,8 @@ struct VPGA {
     spec: VPGASpec,
     input_block: InputBlock,
     output_block: OutputBlock,
+    switch_box: SwitchBox,
     luts: LUT,
-    switch_boxes: SwitchBox,
 }
 
 impl VPGA {
@@ -23,10 +23,10 @@ impl VPGA {
     
         VPGA {
             spec: default_spec,
-            input_block: input_blocks, 
-            output_blocks, 
-            luts,
-            switch_boxes,
+            input_block: InputBlock::new(&self, default_spec.input_block_width), 
+            output_block: OutputBlock::new(&self, default_spec.output_block_width),
+            switch_box: ,
+            luts: ,
         }
     }
         
