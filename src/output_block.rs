@@ -1,4 +1,8 @@
+use std::collections::HashMap;
+
 use uuid::Uuid;
+
+use crate::pin::Pin;
 
 pub struct OutputBlock {
     pub width: i32,
@@ -17,6 +21,16 @@ impl OutputBlock {
 
     pub fn get_pins(&self) -> Vec<Uuid> {
         self.pins.clone()
+    }
+
+    pub fn get_output_from_pins(&self, pin_map: &mut HashMap<Uuid, Pin>) -> Vec<i32> {
+        let mut output = Vec::new();
+        for pin_id in self.pins.clone() {
+            if let Some(pin) = pin_map.get(&pin_id) {
+                output.push(pin.state);
+            }
+        }
+        output
     }
 
 }

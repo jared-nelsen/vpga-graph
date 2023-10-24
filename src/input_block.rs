@@ -1,4 +1,7 @@
+use std::collections::HashMap;
 use uuid::Uuid;
+
+use crate::pin::Pin;
 
 pub struct InputBlock {
     pub width: i32,
@@ -17,6 +20,16 @@ impl InputBlock {
 
     pub fn get_pins(&self) -> Vec<Uuid> {
         self.pins.clone()
+    }
+
+    pub fn load_input_to_pins(&self, input: &Vec<i32>, pin_map: &mut HashMap<Uuid, Pin>) {
+        let mut input_index = 0;
+        for pin_id in &self.pins {
+            if let Some(pin) = pin_map.get_mut(pin_id) {
+                pin.set_state(input[input_index]);
+            }
+            input_index += 1;
+        }
     }
 
 }

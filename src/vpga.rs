@@ -9,6 +9,7 @@ use crate::input_block::InputBlock;
 use crate::output_block::OutputBlock;
 use crate::switch_box::SwitchBox;
 use crate::lut::LUT;
+use crate::data::Data;
 
 pub struct VPGA {
     spec: VPGASpec,
@@ -31,6 +32,12 @@ impl VPGA {
         let pin_map = Self::generate_pin_map(&all_pins);
         let connection_map = Self::generate_connection_map(&all_pins);
         VPGA { spec, input_block, output_block, switch_box, luts, pin_map, connection_map }
+    }
+
+    fn reset(&mut self) {
+        for pin in self.pin_map.values_mut() {
+            pin.reset();
+        }   
     }
 
     fn get_all_pins(input_block: &InputBlock, output_block: &OutputBlock, switch_box: &SwitchBox, luts: Vec<LUT>) -> Vec<Uuid> {
@@ -66,10 +73,19 @@ impl VPGA {
         connection_map
     }
 
-    fn reset(&mut self) {
-        for pin in self.pin_map.values_mut() {
-            pin.reset();
-        }   
+    fn operate(&self) {
+
+    }
+
+    pub fn evaluate(&mut self, data: Data) -> i32 {
+        let mut error = 0;
+        for i in 0..data.sr_count {
+            self.input_block.load_input_to_pins(&data.stimuli, &mut self.pin_map);
+            self.operate();
+            let output = self.output_block.get_output_from_pins(&mut self.pin_map);
+            error += data.diff_output(i, output);
+        }
+        error
     }
         
 }

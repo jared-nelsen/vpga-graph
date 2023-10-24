@@ -12,6 +12,10 @@ impl Pin {
         Pin { id, neighbors: Vec::new(), state: 0 }
     }
 
+    pub fn set_state(&mut self, new_state: i32) {
+        self.state = new_state;
+    }
+
     pub fn reset(&mut self) {
         self.state = 0;
     }
