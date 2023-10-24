@@ -78,6 +78,7 @@ impl VPGA {
     }
 
     pub fn evaluate(&mut self, data: Data) -> i32 {
+        self.reset();
         let mut error = 0;
         for i in 0..data.sr_count {
             self.input_block.load_input_to_pins(&data.stimuli, &mut self.pin_map);
