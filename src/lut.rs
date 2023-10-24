@@ -1,5 +1,6 @@
 use uuid::Uuid;
 
+#[derive(Clone)]
 pub struct LUT {
     pub width: i8,
     pub input_pins: Vec<Uuid>,
@@ -20,6 +21,13 @@ impl LUT {
             new_luts.push(new_lut);
         }
         new_luts
+    }
+
+    pub fn get_pins(self) -> Vec<Uuid> {
+        let mut pins = Vec::new();
+        pins.extend(self.input_pins);
+        pins.push(self.output_pin);
+        pins
     }
 
 }
