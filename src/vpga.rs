@@ -80,11 +80,11 @@ impl VPGA {
     pub fn evaluate(&mut self, data: Data) -> i32 {
         self.reset();
         let mut error = 0;
-        for i in 0..data.sr_count {
+        for sr_index in 0..data.sr_count {
             self.input_block.load_input_to_pins(&data.stimuli, &mut self.pin_map);
             self.operate();
             let output = self.output_block.get_output_from_pins(&mut self.pin_map);
-            error += data.diff_output(i, output);
+            error += data.diff_output(sr_index, output);
         }
         error
     }
