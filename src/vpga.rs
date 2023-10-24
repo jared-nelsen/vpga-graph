@@ -90,66 +90,60 @@ impl VPGA {
 
     }
 
-    fn bfs_update(&self, initial_pin_id: Uuid) {
+    fn bfs_update(&mut self, initial_pin_id: Uuid) {
         let mut visited_pins: HashSet<Uuid> = HashSet::new();
-        let mut queue: Queue<Uuid> = queue![];
-        if let Some(initial_pin) = self.pin_map.get(&initial_pin_id) {
-            let previous_pin_id = initial_pin.id;
-            visited_pins.insert(initial_pin.id);
-            let _ = queue.add(initial_pin.id);
-            while queue.size() != 0 {
-                match queue.remove() {
-                    Ok(current_pin_id) => {
-                        if current_pin_id != previous_pin_id {
-                            let connection_id = Connection::generate_connection_id(&previous_pin_id, &current_pin_id);
-                            match self.connection_map.get(&connection_id) {
-                                Some(connection) => {
-                                    match self.pin_map.get(&connection.source_pin) {
-                                        Some(source_pin) => {
-                                            match self.pin_map.get(&connection.target_pin) {
-                                                Some(target_pin) => {
-                                                    if source_pin.clone().is_on() && connection.is_live() && !target_pin.is_input_pin(&self.input_block) {
-                                                        target_pin.turn_on();
-                                                    }
-                                                },
-                                                None => {
-                                                    println!("Target pin {} not found", connection.target_pin.to_string());
-                                                    return
-                                                },
-                                            }
-                                        },
-                                        None => {
-                                            println!("Source pin {} not found", connection.source_pin.to_string());
-                                        },
-                                    }
-                                },
-                                None => {
-                                    println!("No connection found for id: {}", connection_id);
-                                    return
-                                },
+        let mut queue: Vec<Uuid> = Vec::new();
+    
+        if !self.pin_map.contains_key(&initial_pin_id) {
+            println!("Initial pin {} not found", initial_pin_id.to_string());
+            return;
+        }
+    
+        visited_pins.insert(initial_pin_id);
+        queue.push(initial_pin_id);
+    
+        let mut previous_pin_id = initial_pin_id;
+    
+        while !queue.is_empty() {
+            let current_pin_id = queue.remove(0);
+    
+            if current_pin_id != previous_pin_id {
+                let connection_id = Connection::generate_connection_id(&previous_pin_id, &current_pin_id);
+                
+                let should_turn_on = if let Some(connection) = self.connection_map.get(&connection_id) {
+                    if let Some(source_pin) = self.pin_map.get(&connection.source_pin) {
+                        source_pin.is_on() && connection.is_live()
+                    } else {
+                        false
+                    }
+                } else {
+                    println!("No connection found for id: {}", connection_id);
+                    return;
+                };
+            
+                if should_turn_on {
+                    if let Some(connection) = self.connection_map.get(&connection_id) {
+                        if let Some(target_pin) = self.pin_map.get_mut(&connection.target_pin) {
+                            if !target_pin.is_input_pin(&self.input_block) {
+                                target_pin.turn_on();
                             }
                         }
-
-                        match self.pin_map.get(&current_pin_id) {
-                            Some(current_pin) => {
-                                for neighbor_pin in current_pin.neighbors.to_vec() {
-                                    if !visited_pins.contains(&neighbor_pin) {
-                                        visited_pins.insert(neighbor_pin);
-                                        queue.add(neighbor_pin);
-                                    }
-                                }
-                            },
-                            None => {
-                                println!("No pin {} found", current_pin_id.to_string())
-                            },
-                        }
-                    },
-                    Err(_) => {
-                        println!("Error removing from queue");
-                        return
-                    },
+                    }
                 }
             }
+    
+            if let Some(current_pin) = self.pin_map.get(&current_pin_id) {
+                for neighbor_pin_id in &current_pin.neighbors {
+                    if !visited_pins.contains(neighbor_pin_id) {
+                        visited_pins.insert(*neighbor_pin_id);
+                        queue.push(*neighbor_pin_id);
+                    }
+                }
+            } else {
+                println!("No pin {} found", current_pin_id);
+            }
+    
+            previous_pin_id = current_pin_id;
         }
     }
         
