@@ -1,6 +1,4 @@
-use std::collections::{HashMap, HashSet};
-
-use queues::{Queue, queue, IsQueue};
+use std::collections::{HashMap, HashSet, VecDeque};
 use uuid::Uuid;
 
 use crate::pin::Pin;
@@ -92,38 +90,36 @@ impl VPGA {
 
     fn bfs_update(&mut self, initial_pin_id: Uuid) {
         let mut visited_pins: HashSet<Uuid> = HashSet::new();
-        let mut queue: Vec<Uuid> = Vec::new();
+        let mut queue: VecDeque<Uuid> = VecDeque::new();
     
         if !self.pin_map.contains_key(&initial_pin_id) {
-            println!("Initial pin {} not found", initial_pin_id.to_string());
+            println!("Initial pin {} not found", initial_pin_id);
             return;
         }
     
         visited_pins.insert(initial_pin_id);
-        queue.push(initial_pin_id);
+        queue.push_back(initial_pin_id);
     
-        let mut previous_pin_id = initial_pin_id;
-    
-        while !queue.is_empty() {
-            let current_pin_id = queue.remove(0);
-    
-            if current_pin_id != previous_pin_id {
-                let connection_id = Connection::generate_connection_id(&previous_pin_id, &current_pin_id);
-                
-                let should_turn_on = if let Some(connection) = self.connection_map.get(&connection_id) {
-                    if let Some(source_pin) = self.pin_map.get(&connection.source_pin) {
-                        source_pin.is_on() && connection.is_live()
+        while let Some(current_pin_id) = queue.pop_front() {
+            let current_pin = &self.pin_map[&current_pin_id];
+            let neighbor_ids: Vec<Uuid> = current_pin.neighbors.clone();
+        
+            for neighbor_pin_id in &neighbor_ids {
+                if !visited_pins.contains(neighbor_pin_id) {
+                    visited_pins.insert(*neighbor_pin_id);
+                    queue.push_back(*neighbor_pin_id);
+        
+                    let connection_id = Connection::generate_connection_id(&current_pin_id, neighbor_pin_id);
+        
+                    let should_turn_on = if let Some(connection) = self.connection_map.get(&connection_id) {
+                        self.pin_map[&connection.source_pin].is_on() && connection.is_live()
                     } else {
-                        false
-                    }
-                } else {
-                    println!("No connection found for id: {}", connection_id);
-                    return;
-                };
-            
-                if should_turn_on {
-                    if let Some(connection) = self.connection_map.get(&connection_id) {
-                        if let Some(target_pin) = self.pin_map.get_mut(&connection.target_pin) {
+                        println!("No connection found for id: {}", connection_id);
+                        continue;
+                    };
+        
+                    if should_turn_on {
+                        if let Some(target_pin) = self.pin_map.get_mut(&neighbor_pin_id) {
                             if !target_pin.is_input_pin(&self.input_block) {
                                 target_pin.turn_on();
                             }
@@ -131,19 +127,6 @@ impl VPGA {
                     }
                 }
             }
-    
-            if let Some(current_pin) = self.pin_map.get(&current_pin_id) {
-                for neighbor_pin_id in &current_pin.neighbors {
-                    if !visited_pins.contains(neighbor_pin_id) {
-                        visited_pins.insert(*neighbor_pin_id);
-                        queue.push(*neighbor_pin_id);
-                    }
-                }
-            } else {
-                println!("No pin {} found", current_pin_id);
-            }
-    
-            previous_pin_id = current_pin_id;
         }
     }
         
