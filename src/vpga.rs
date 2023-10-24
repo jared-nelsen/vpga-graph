@@ -66,8 +66,10 @@ impl VPGA {
         connection_map
     }
 
-    fn reset(&self) {
-
+    fn reset(&mut self) {
+        for pin in self.pin_map.values_mut() {
+            pin.reset();
+        }   
     }
         
 }
