@@ -14,7 +14,11 @@ impl Connection {
     }
 
     pub fn generate_connection_id(source_pin: &Uuid, target_pin: &Uuid) -> String {
-        source_pin.to_string() + &target_pin.to_string() // TODO: Why the ref here?
+        source_pin.to_string() + &target_pin.to_string()
+    }
+
+    pub fn is_live(&self) -> bool {
+        self.state == 1
     }
     
 }
