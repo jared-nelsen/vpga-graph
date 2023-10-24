@@ -1,6 +1,6 @@
 
 use crate::vpga_spec::VPGASpec;
-use crate::vpga::{VPGA, self};
+use crate::vpga::VPGA;
 use crate::data::Data;
 
 pub struct Simulation {
