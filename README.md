@@ -4,9 +4,11 @@
 
 ## TODO
 
-    - Write Data module
-    - Write Algorithm module
-    - Write Verify module
+    - LUT operate
+    - VPGA operate
+    - Simulation
+    - Tabu search
+    - Concurrency
 
 ## Rules
 

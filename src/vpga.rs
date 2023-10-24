@@ -85,7 +85,9 @@ impl VPGA {
     }
 
     fn operate(&self) {
-
+        // Call bfs for all input pins
+        // Operate each LUT in order
+            // After each operation then call bfs for each output pin on the lut
     }
 
     fn bfs_update(&mut self, initial_pin_id: Uuid) {

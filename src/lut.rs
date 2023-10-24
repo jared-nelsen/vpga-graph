@@ -30,4 +30,8 @@ impl LUT {
         pins
     }
 
+    pub fn operate() {
+        // TODO
+    }
+
 }
