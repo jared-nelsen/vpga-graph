@@ -2,14 +2,14 @@ use uuid::Uuid;
 
 #[derive(Clone)]
 pub struct LUT {
-    pub width: i8,
+    pub width: i32,
     pub input_pins: Vec<Uuid>,
     pub output_pin: Uuid,
 }
 
 impl LUT {
 
-    pub fn new_n(count: i8, width: i8) -> Vec<Self> {
+    pub fn new_n(count: i32, width: i32) -> Vec<Self> {
         let mut new_luts = Vec::new();
         for _i in 0..count {
             let mut input_pins = Vec::new();

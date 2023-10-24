@@ -4,7 +4,7 @@ pub struct Connection {
     pub id: String,
     pub source_pin: Uuid,
     pub target_pin: Uuid,
-    pub state: i8,
+    pub state: i32,
 }
 
 impl Connection {

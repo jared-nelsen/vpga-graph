@@ -1,13 +1,13 @@
 use uuid::Uuid;
 
 pub struct SwitchBox {
-    pub pin_count: i8,
+    pub pin_count: i32,
     pub pins: Vec<Uuid>,
 }
 
 impl SwitchBox {
 
-    pub fn new(pin_count: i8) -> Self {
+    pub fn new(pin_count: i32) -> Self {
         let mut pins = Vec::new();
         for _i in 0..pin_count {
             pins.push(Uuid::new_v4());

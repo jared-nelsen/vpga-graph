@@ -10,7 +10,7 @@ use crate::output_block::OutputBlock;
 use crate::switch_box::SwitchBox;
 use crate::lut::LUT;
 
-struct VPGA {
+pub struct VPGA {
     spec: VPGASpec,
     input_block: InputBlock,
     output_block: OutputBlock,
@@ -22,18 +22,18 @@ struct VPGA {
 
 impl VPGA {
 
-    pub fn default(&self, spec: VPGASpec) -> Self {
+    pub fn new(spec: VPGASpec) -> Self {
         let input_block = InputBlock::new(spec.input_block_width);
         let output_block = OutputBlock::new(spec.output_block_width);
         let switch_box = SwitchBox::new(spec.switch_box_pin_count);
         let luts = LUT::new_n(spec.lut_count, spec.lut_width);
-        let all_pins = self.get_all_pins(&input_block, &output_block, &switch_box, luts.clone());
-        let pin_map = self.generate_pin_map(&all_pins);
-        let connection_map = self.generate_connection_map(&all_pins);
+        let all_pins = Self::get_all_pins(&input_block, &output_block, &switch_box, luts.clone());
+        let pin_map = Self::generate_pin_map(&all_pins);
+        let connection_map = Self::generate_connection_map(&all_pins);
         VPGA { spec, input_block, output_block, switch_box, luts, pin_map, connection_map }
     }
 
-    fn get_all_pins(&self, input_block: &InputBlock, output_block: &OutputBlock, switch_box: &SwitchBox, luts: Vec<LUT>) -> Vec<Uuid> {
+    fn get_all_pins(input_block: &InputBlock, output_block: &OutputBlock, switch_box: &SwitchBox, luts: Vec<LUT>) -> Vec<Uuid> {
         let mut all_pins = Vec::new();
         all_pins.extend(input_block.get_pins());
         all_pins.extend(output_block.get_pins());
@@ -44,7 +44,7 @@ impl VPGA {
         all_pins
     }
 
-    fn generate_pin_map(&self, all_pins: &Vec<Uuid>) -> HashMap<Uuid, Pin> {
+    fn generate_pin_map(all_pins: &Vec<Uuid>) -> HashMap<Uuid, Pin> {
         let mut pin_map = HashMap::new();
         for pin_id in all_pins {
             pin_map.insert(pin_id.clone(), Pin::new(pin_id.clone()));
@@ -52,7 +52,7 @@ impl VPGA {
         pin_map
     }
 
-    fn generate_connection_map(&self, all_pins: &Vec<Uuid>) -> HashMap<String, Connection> {
+    fn generate_connection_map(all_pins: &Vec<Uuid>) -> HashMap<String, Connection> {
         let mut connection_map = HashMap::new();
         for source_pin in all_pins {
             for target_pin in all_pins {
