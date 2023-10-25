@@ -4,6 +4,7 @@ use uuid::Uuid;
 
 use crate::pin::Pin;
 
+#[derive(Debug)]
 pub struct OutputBlock {
     pub width: i32,
     pub pins: Vec<Uuid>,

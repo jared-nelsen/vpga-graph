@@ -1,4 +1,7 @@
+use vpga_graph::simulation::Simulation;
+
 fn main() {
-    println!("Hello, world!");
+    let mut simulation = Simulation::new();
+    simulation.run();
 }
 

@@ -2,7 +2,7 @@ use uuid::Uuid;
 
 use crate::input_block::InputBlock;
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Pin {
     pub id: Uuid,
     pub neighbors: Vec<Uuid>,

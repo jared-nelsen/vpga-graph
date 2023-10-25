@@ -11,6 +11,7 @@ use crate::lut::LUT;
 use crate::data::Data;
 use crate::encoding::Encoding;
 
+#[derive(Debug)]
 pub struct VPGA {
     _spec: VPGASpec,
     input_block: InputBlock,

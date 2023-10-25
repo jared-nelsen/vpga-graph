@@ -1,5 +1,6 @@
 use uuid::Uuid;
 
+#[derive(Debug)]
 pub struct Connection {
     pub id: String,
     pub source_pin: Uuid,
