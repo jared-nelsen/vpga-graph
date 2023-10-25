@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque, BTreeMap};
 use uuid::Uuid;
 
 use crate::pin::Pin;
@@ -18,7 +18,7 @@ pub struct VPGA {
     _switch_box: SwitchBox,
     luts: Vec<LUT>,
     pin_map: HashMap<Uuid, Pin>,
-    connection_map: HashMap<String, Connection>,
+    connection_map: BTreeMap<String, Connection>,
     pub fitness: i32
 }
 
@@ -61,8 +61,8 @@ impl VPGA {
         pin_map
     }
 
-    fn generate_connection_map(all_pins: &Vec<Uuid>) -> HashMap<String, Connection> {
-        let mut connection_map = HashMap::new();
+    fn generate_connection_map(all_pins: &Vec<Uuid>) -> BTreeMap<String, Connection> {
+        let mut connection_map = BTreeMap::new();
         for source_pin in all_pins {
             for target_pin in all_pins {
                 if source_pin != target_pin {
