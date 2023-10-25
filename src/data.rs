@@ -1,4 +1,3 @@
-use rand::Rng;
 
 pub struct Data {
     pub sr_count: i32,
