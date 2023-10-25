@@ -1,6 +1,6 @@
 
 
-#[derive(Clone, PartialEq, PartialOrd)]
+#[derive(Hash, Eq, Clone, PartialEq, PartialOrd)]
 pub struct Encoding {
     pub fitness: i32,
     width: i32,

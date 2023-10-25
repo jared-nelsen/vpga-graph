@@ -1,5 +1,5 @@
 
-use std::collections::{HashSet, VecDeque};
+use std::collections::{HashSet, VecDeque, HashMap};
 
 use crate::encoding::Encoding;
 use crate::vpga_spec::VPGASpec;
@@ -34,9 +34,10 @@ impl Simulation {
         let mut current_solution = self.best_encoding.clone();
         let mut best_solution = current_solution.clone();
         let mut tabu_list: VecDeque<Encoding> = VecDeque::new();
+        let mut known_fitness_values: HashMap<Encoding, i32>   = HashMap::new();
 
         for _ in 0..1000 {
-            let neighbor_solution = self.get_best_neighbor(&mut current_solution, &tabu_list);
+            let neighbor_solution = self.get_best_neighbor(&mut current_solution, &tabu_list, &mut known_fitness_values);
     
             if tabu_list.len() > tabu_size {
                 tabu_list.pop_front();
@@ -53,7 +54,7 @@ impl Simulation {
         self.best_encoding = best_solution;
     }
 
-    fn get_best_neighbor(&mut self, encoding: &Encoding, tabu_set: &VecDeque<Encoding>) -> Encoding {
+    fn get_best_neighbor(&mut self, encoding: &Encoding, tabu_set: &VecDeque<Encoding>, known_fitness_values: &mut HashMap<Encoding, i32>) -> Encoding {
         let neighbor_generate_count = 100;
         let mut best_neighbor = encoding.clone();
         let mut best_fitness = i32::MAX;
@@ -66,11 +67,15 @@ impl Simulation {
                 continue;
             }
     
-            self.vpga.apply_encoding_to_vpga(&neighbor);
-            self.vpga.evaluate(&self.data);
-    
-            let neighbor_fitness = self.vpga.fitness;
-    
+            let neighbor_fitness;
+            if known_fitness_values.contains_key(&neighbor) {
+                neighbor_fitness = *known_fitness_values.get(&neighbor).unwrap();
+            } else {
+                self.vpga.apply_encoding_to_vpga(&neighbor);
+                self.vpga.evaluate(&self.data);
+                neighbor_fitness = self.vpga.fitness;
+            }
+
             if neighbor_fitness < best_fitness {
                 best_neighbor = neighbor.clone();
                 best_fitness = neighbor_fitness;
