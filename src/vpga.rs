@@ -17,7 +17,7 @@ pub struct VPGA {
     _switch_box: SwitchBox,
     luts: Vec<LUT>,
     pin_map: HashMap<Uuid, Pin>,
-    connection_map: HashMap<String, Connection>
+    connection_map: HashMap<String, Connection>,
     fitness: i32
 }
 
