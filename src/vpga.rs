@@ -11,10 +11,10 @@ use crate::lut::LUT;
 use crate::data::Data;
 
 pub struct VPGA {
-    spec: VPGASpec,
+    _spec: VPGASpec,
     input_block: InputBlock,
     output_block: OutputBlock,
-    switch_box: SwitchBox,
+    _switch_box: SwitchBox,
     luts: Vec<LUT>,
     pin_map: HashMap<Uuid, Pin>,
     connection_map: HashMap<String, Connection>
@@ -22,15 +22,15 @@ pub struct VPGA {
 
 impl VPGA {
 
-    pub fn new(spec: VPGASpec) -> Self {
-        let input_block = InputBlock::new(spec.input_block_width);
-        let output_block = OutputBlock::new(spec.output_block_width);
-        let switch_box = SwitchBox::new(spec.switch_box_pin_count);
-        let luts = LUT::new_n(spec.lut_count, spec.lut_width);
-        let all_pins = Self::get_all_pins(&input_block, &output_block, &switch_box, luts.clone());
+    pub fn new(_spec: VPGASpec) -> Self {
+        let input_block = InputBlock::new(_spec.input_block_width);
+        let output_block = OutputBlock::new(_spec.output_block_width);
+        let _switch_box = SwitchBox::new(_spec.switch_box_pin_count);
+        let luts = LUT::new_n(_spec.lut_count, _spec.lut_width);
+        let all_pins = Self::get_all_pins(&input_block, &output_block, &_switch_box, luts.clone());
         let pin_map = Self::generate_pin_map(&all_pins);
         let connection_map = Self::generate_connection_map(&all_pins);
-        VPGA { spec, input_block, output_block, switch_box, luts, pin_map, connection_map }
+        VPGA { _spec, input_block, output_block, _switch_box, luts, pin_map, connection_map }
     }
 
     fn reset(&mut self) {
@@ -84,11 +84,14 @@ impl VPGA {
         error
     }
 
-    fn operate(&self) {
-        // TODO
-        // Call bfs for all input pins
-        // Operate each LUT in order
-            // After each operation then call bfs for each output pin on the lut
+    fn operate(&mut self) {
+        for input_pin_id in self.input_block.get_pins() {
+            self.bfs_update(input_pin_id);
+        }
+        for mut lut in self.luts.to_vec() {
+            lut.operate();
+            self.bfs_update(lut.output_pin);
+        }
     }
 
     fn bfs_update(&mut self, initial_pin_id: Uuid) {

@@ -2,7 +2,7 @@ use rand::Rng;
 
 pub struct Data {
     pub sr_count: i32,
-    stimulus_width: i32,
+    _stimulus_width: i32,
     pub stimuli: Vec<i32>,
     response_width: i32,
     pub responses: Vec<i32>,
@@ -10,12 +10,12 @@ pub struct Data {
 
 impl Data {
 
-    pub fn random(sr_count: i32, stimulus_width: i32, response_width: i32) -> Self {
-        let stimuli = Self::generate_stimuli(sr_count, stimulus_width);
+    pub fn random(sr_count: i32, _stimulus_width: i32, response_width: i32) -> Self {
+        let stimuli = Self::generate_stimuli(sr_count, _stimulus_width);
         let responses = Self::generate_responses(sr_count, response_width);
         Data {
             sr_count,
-            stimulus_width,
+            _stimulus_width,
             stimuli,
             response_width,
             responses,

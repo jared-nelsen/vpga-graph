@@ -30,7 +30,7 @@ impl LUT {
         pins
     }
 
-    pub fn operate() {
+    pub fn operate(&mut self) {
         // TODO
     }
 
