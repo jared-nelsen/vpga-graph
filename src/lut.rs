@@ -12,7 +12,7 @@ pub struct LUT {
 impl LUT {
 
     pub fn new_n(count: i32, width: i32) -> Vec<Self> {
-        let encoding_width = i32::pow(width, 2);
+        let encoding_width = i32::pow(width, 2); // TODO Repeated computation
         let mut new_luts = Vec::new();
         for _i in 0..count {
             let mut encoding = Vec::new();

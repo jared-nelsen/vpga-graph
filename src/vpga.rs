@@ -13,7 +13,7 @@ use crate::encoding::Encoding;
 
 #[derive(Debug)]
 pub struct VPGA {
-    _spec: VPGASpec,
+    spec: VPGASpec,
     input_block: InputBlock,
     output_block: OutputBlock,
     _switch_box: SwitchBox,
@@ -34,7 +34,7 @@ impl VPGA {
         let pin_map = Self::generate_pin_map(&all_pins);
         let connection_map = Self::generate_connection_map(&all_pins);
         let fitness = 999999999;
-        VPGA { _spec, input_block, output_block, _switch_box, luts, pin_map, connection_map, fitness }
+        VPGA { spec: _spec, input_block, output_block, _switch_box, luts, pin_map, connection_map, fitness }
     }
 
     fn reset(&mut self) {
@@ -78,13 +78,18 @@ impl VPGA {
 
     pub fn get_encoding_length(&self) -> i32 {
         let connection_count = self.connection_map.len() as i32;
-        let lut_input_pin_count = self._spec.lut_count * self._spec.lut_width;
+        let lut_input_pin_count = self.spec.lut_count * self.spec.lut_encoding_width;
         lut_input_pin_count + connection_count
     }
 
     pub fn apply_encoding_to_vpga(&mut self, encoding: &Encoding) {
         let mut encoding_index = 0;
+
         for connection in self.connection_map.values_mut() {
+            if encoding_index >= encoding.encoding.len() {
+                panic!("Exceeded encoding length while processing connections. Current index: {}", encoding_index);
+            }
+        
             if encoding.encoding[encoding_index] == 1 {
                 connection.set_live(1);
             } else {
@@ -92,8 +97,13 @@ impl VPGA {
             }
             encoding_index += 1;
         }
+        
         for lut in &mut self.luts {
             for j in 0..lut.encoding_width {
+                if encoding_index >= encoding.encoding.len() {
+                    panic!("Exceeded encoding length while processing LUTs. Current LUT encoding width: {}. Current index: {}", lut.encoding_width, encoding_index);
+                }
+        
                 lut.encoding[j as usize] = encoding.encoding[encoding_index];
                 encoding_index += 1;
             }
