@@ -18,6 +18,7 @@ pub struct VPGA {
     luts: Vec<LUT>,
     pin_map: HashMap<Uuid, Pin>,
     connection_map: HashMap<String, Connection>
+    fitness: i32
 }
 
 impl VPGA {
@@ -30,7 +31,8 @@ impl VPGA {
         let all_pins = Self::get_all_pins(&input_block, &output_block, &_switch_box, luts.clone());
         let pin_map = Self::generate_pin_map(&all_pins);
         let connection_map = Self::generate_connection_map(&all_pins);
-        VPGA { _spec, input_block, output_block, _switch_box, luts, pin_map, connection_map }
+        let fitness = 999999999;
+        VPGA { _spec, input_block, output_block, _switch_box, luts, pin_map, connection_map, fitness }
     }
 
     fn reset(&mut self) {
@@ -72,7 +74,7 @@ impl VPGA {
         connection_map
     }
 
-    pub fn evaluate(&mut self, data: Data) -> i32 {
+    pub fn evaluate(&mut self, data: Data) {
         self.reset();
         let mut error = 0;
         for sr_index in 0..data.sr_count {
@@ -81,7 +83,7 @@ impl VPGA {
             let output = self.output_block.get_output_from_pins(&mut self.pin_map);
             error += data.diff_output(sr_index, output);
         }
-        error
+        self.fitness = error;
     }
 
     fn operate(&mut self) {
