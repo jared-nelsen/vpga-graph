@@ -1,5 +1,5 @@
 
-use std::collections::{HashSet, VecDeque, HashMap};
+use std::collections::{VecDeque, HashMap};
 
 use crate::encoding::Encoding;
 use crate::vpga_spec::VPGASpec;
@@ -7,8 +7,6 @@ use crate::vpga::VPGA;
 use crate::data::Data;
 
 pub struct Simulation {
-    sr_count: i32,
-    vpga_spec: VPGASpec,
     vpga: VPGA,
     data: Data,
     best_encoding: Encoding
@@ -26,7 +24,7 @@ impl Simulation {
             vpga_spec.output_block_width,
         );
         let best_encoding = Encoding::new_random(vpga.get_encoding_length());
-        Simulation { sr_count, vpga_spec, vpga, data, best_encoding }
+        Simulation { vpga, data, best_encoding }
     }
 
     pub fn run(&mut self) {
@@ -48,6 +46,7 @@ impl Simulation {
     
             if neighbor_solution.fitness < best_solution.fitness {
                 best_solution = neighbor_solution.clone();
+                println!("New best fitness found: {}", best_solution.fitness);
             }
         }
     
@@ -74,10 +73,11 @@ impl Simulation {
                 self.vpga.apply_encoding_to_vpga(&neighbor);
                 self.vpga.evaluate(&self.data);
                 neighbor_fitness = self.vpga.fitness;
+                known_fitness_values.insert(neighbor.clone(), neighbor_fitness);
             }
 
             if neighbor_fitness < best_fitness {
-                best_neighbor = neighbor.clone();
+                best_neighbor = neighbor;
                 best_fitness = neighbor_fitness;
             }
         }
