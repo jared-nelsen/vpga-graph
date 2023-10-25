@@ -17,6 +17,10 @@ impl Connection {
         source_pin.to_string() + &target_pin.to_string()
     }
 
+    pub fn set_live(&mut self, state: i32) {
+        self.state = state;
+    }
+
     pub fn is_live(&self) -> bool {
         self.state == 1
     }

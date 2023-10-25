@@ -82,7 +82,21 @@ impl VPGA {
     }
 
     pub fn apply_encoding_to_vpga(&mut self, encoding: &Encoding) {
-
+        let mut encoding_index = 0;
+        for connection in self.connection_map.values_mut() {
+            if encoding.encoding[encoding_index] == 1 {
+                connection.set_live(1);
+            } else {
+                connection.set_live(0);
+            }
+            encoding_index += 1;
+        }
+        for lut in &mut self.luts {
+            for j in 0..lut.encoding_width {
+                lut.encoding[j as usize] = encoding.encoding[encoding_index];
+                encoding_index += 1;
+            }
+        }
     }
 
     pub fn evaluate(&mut self, data: &Data) {

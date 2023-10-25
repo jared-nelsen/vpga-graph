@@ -4,7 +4,7 @@
 pub struct Encoding {
     pub fitness: i32,
     width: i32,
-    encoding: Vec<i32>,
+    pub encoding: Vec<i32>,
 }
 
 impl Encoding {
