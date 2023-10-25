@@ -9,6 +9,7 @@ use crate::output_block::OutputBlock;
 use crate::switch_box::SwitchBox;
 use crate::lut::LUT;
 use crate::data::Data;
+use crate::encoding::Encoding;
 
 pub struct VPGA {
     _spec: VPGASpec,
@@ -18,7 +19,7 @@ pub struct VPGA {
     luts: Vec<LUT>,
     pin_map: HashMap<Uuid, Pin>,
     connection_map: HashMap<String, Connection>,
-    fitness: i32
+    pub fitness: i32
 }
 
 impl VPGA {
@@ -74,7 +75,17 @@ impl VPGA {
         connection_map
     }
 
-    pub fn evaluate(&mut self, data: Data) {
+    pub fn get_encoding_length(&self) -> i32 {
+        let connection_count = self.connection_map.len() as i32;
+        let lut_input_pin_count = self._spec.lut_count * self._spec.lut_width;
+        lut_input_pin_count + connection_count
+    }
+
+    pub fn apply_encoding_to_vpga(&mut self, encoding: &Encoding) {
+
+    }
+
+    pub fn evaluate(&mut self, data: &Data) {
         self.reset();
         let mut error = 0;
         for sr_index in 0..data.sr_count {

@@ -8,3 +8,4 @@ pub mod connection;
 pub mod switch_box;
 pub mod data;
 pub mod simulation;
+pub mod encoding;
