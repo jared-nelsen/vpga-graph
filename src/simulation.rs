@@ -32,9 +32,10 @@ impl Simulation {
         let mut current_solution = self.best_encoding.clone();
         let mut best_solution = current_solution.clone();
         let mut tabu_list: VecDeque<Encoding> = VecDeque::new();
-        let mut known_fitness_values: HashMap<Encoding, i32>   = HashMap::new();
+        let mut known_fitness_values: HashMap<Encoding, i32> = HashMap::new();
 
-        for _ in 0..1000 {
+        for iteration in 0..10000 {
+            println!("Iteration: {}", iteration);
             let neighbor_solution = self.get_best_neighbor(&mut current_solution, &tabu_list, &mut known_fitness_values);
     
             if tabu_list.len() > tabu_size {
@@ -54,7 +55,7 @@ impl Simulation {
     }
 
     fn get_best_neighbor(&mut self, encoding: &Encoding, tabu_set: &VecDeque<Encoding>, known_fitness_values: &mut HashMap<Encoding, i32>) -> Encoding {
-        let neighbor_generate_count = 100;
+        let neighbor_generate_count = 1000;
         let mut best_neighbor = encoding.clone();
         let mut best_fitness = i32::MAX;
         

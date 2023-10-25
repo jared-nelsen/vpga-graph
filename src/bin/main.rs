@@ -4,4 +4,3 @@ fn main() {
     let mut simulation = Simulation::new();
     simulation.run();
 }
-

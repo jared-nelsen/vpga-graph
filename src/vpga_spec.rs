@@ -17,10 +17,10 @@ impl VPGASpec {
         VPGASpec {
             input_block_width: 8, 
             output_block_width: 8, 
-            lut_count: 4, 
+            lut_count: 50, 
             lut_width,  
             lut_encoding_width,
-            switch_box_pin_count: 8,
+            switch_box_pin_count: 10,
         }
     }
     

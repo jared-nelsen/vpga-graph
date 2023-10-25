@@ -32,8 +32,7 @@ impl Data {
 
     fn generate_random_binary_vector(count: i32, width: i32) -> Vec<i32> {
         let total_length = count * width;
-        let mut rng = rand::thread_rng();
-        (0..total_length).map(|_| rng.gen_range(0..2)).collect()
+        (0..total_length).map(|_| if rand::random() { 1 } else { 0 }).collect()
     }
 
     pub fn diff_output(&self, response_index: i32, output: Vec<i32>) -> i32 {
