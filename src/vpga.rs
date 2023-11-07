@@ -127,7 +127,7 @@ impl VPGA {
             self.bfs_update(input_pin_id);
         }
         for mut lut in self.luts.to_vec() {
-            lut.operate();
+            lut.operate(&mut self.pin_map);
             self.bfs_update(lut.output_pin);
         }
     }
